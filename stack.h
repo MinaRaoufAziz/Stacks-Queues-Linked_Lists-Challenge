@@ -28,7 +28,7 @@
 #define STACK_OVER_FLOW				-3
 #define STACK_UNDER_FLOW			-4
 
-
+#define MAX_CHAR_NUM		10
 
 
 #define DATA_EMPTY		0
@@ -40,11 +40,6 @@ typedef struct
 	uint32 size;
 	uint32 * current_pointer;
 }ST_stackInfo;
-
-extern ST_stackInfo Stack;
-
-
-
 
 void createStack(ST_stackInfo *info, uint32 size);
 void push(ST_stackInfo *info, uint32 data);
