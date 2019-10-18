@@ -14,7 +14,6 @@ uint8 is_stack_created = STACK_INITIAL_FLAG_VALUE;
 uint8 is_stack_pushed = STACK_INITIAL_FLAG_VALUE;
 uint8 is_stack_pulled = STACK_INITIAL_FLAG_VALUE;
 uint8 stack_status_flag = STACK_INITIAL_FLAG_VALUE;
-ST_stackInfo * struct_pointer;
 uint32 * top_ptr;
 
 
@@ -29,13 +28,14 @@ void createStack(ST_stackInfo *info, uint32 size)
 		top_ptr = (uint32 * ) calloc (size, sizeof(uint32));
 		info ->top = top_ptr;
 		info ->size = size;
+		info -> current_pointer = info -> top;
 		is_stack_created = STACK_CREATED;
-		*(info->top) = TOP_START;
+		*(info->current_pointer) = TOP_START;
 		stack_status_flag = STACK_EMPTY;
 	}
 }
 
-void push(ST_stackInfo info, uint32 data)
+void push(ST_stackInfo *info, uint32 data)
 {
 	/* in this function we need first to check that the stack is created in the first place.
 	 * Then we will check that the top not pointing to the bottom element, if so
@@ -45,12 +45,11 @@ void push(ST_stackInfo info, uint32 data)
 	if ((STACK_CREATED == is_stack_created) && (STACK_OVER_FLOW != stack_status_flag))
 		/* As the stack must be created at first */
 	{
-		if ((info.top) != (top_ptr+((info.size)-1)))
+		if ((info -> current_pointer) != ((info -> top)+((info->size)-1)))
 			/* Here we check if the top is not pointing to the last element*/
 			{
-			struct_pointer = &info;
-			*(struct_pointer->top) = data;
-			info.top++;
+			*(info->current_pointer) = data;
+			(info->current_pointer)++;
 			is_stack_pushed++;
 			stack_status_flag = STACK_NOT_EMPTY;
 			}
@@ -83,13 +82,14 @@ void pop(ST_stackInfo *info, uint32* data)
 	/* Then we need to check that the stack is created and not underflow and is containing data */
 		if ((STACK_CREATED == is_stack_created) && (STACK_NOT_UNDERFLOW == stack_status_flag))
 		{
-			if ((info -> top) != top_ptr)
+			if ((info -> current_pointer) != (info ->top))
 			{
 				/* Here we make sure that the top pointer is not pointing the first element
 				 * in the stack to avoid underflow.
 				 * If so, then we clear the data and decrement the pointer by one step */
-				*(struct_pointer->top) = DATA_EMPTY;
-				(info->top)--;
+				*data = *(info->current_pointer);
+				*(info->current_pointer) = DATA_EMPTY;
+				(info->current_pointer)--;
 				is_stack_pulled++;
 				stack_status_flag = STACK_NOT_EMPTY;
 			}
