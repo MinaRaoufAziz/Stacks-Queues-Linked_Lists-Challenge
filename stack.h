@@ -30,6 +30,7 @@
 
 
 
+
 #define DATA_EMPTY		0
 #define TOP_START		-1
 
@@ -37,6 +38,7 @@ typedef struct
 {
 	uint32 * top;
 	uint32 size;
+	uint32 * current_pointer;
 }ST_stackInfo;
 
 extern ST_stackInfo Stack;
@@ -45,7 +47,7 @@ extern ST_stackInfo Stack;
 
 
 void createStack(ST_stackInfo *info, uint32 size);
-void push(ST_stackInfo info, uint32 data);
+void push(ST_stackInfo *info, uint32 data);
 void pop(ST_stackInfo *info, uint32* data);
 
 #endif /* STACK_H_ */
