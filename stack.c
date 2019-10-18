@@ -14,7 +14,7 @@ uint8 is_stack_created = STACK_INITIAL_FLAG_VALUE;
 uint8 is_stack_pushed = STACK_INITIAL_FLAG_VALUE;
 uint8 is_stack_pulled = STACK_INITIAL_FLAG_VALUE;
 uint8 stack_status_flag = STACK_INITIAL_FLAG_VALUE;
-uint32 * top_ptr;
+//uint32 * top_ptr = NULL;
 
 
 void createStack(ST_stackInfo *info, uint32 size)
@@ -23,10 +23,9 @@ void createStack(ST_stackInfo *info, uint32 size)
 	 * then we will access the structure elements and assign the top pointer the casted pointer
 	 * from the dynamic memory allocation. then we will assign the size parameter passed to the
 	 * function to the structure size member. */
-	if (info != NULL)
+	if (info  != NULL)
 	{
-		top_ptr = (uint32 * ) calloc (size, sizeof(uint32));
-		info ->top = top_ptr;
+		info ->top= (uint32 * ) calloc (size, sizeof(uint32));
 		info ->size = size;
 		info -> current_pointer = info -> top;
 		is_stack_created = STACK_CREATED;
@@ -48,8 +47,8 @@ void push(ST_stackInfo *info, uint32 data)
 		if ((info -> current_pointer) != ((info -> top)+((info->size)-1)))
 			/* Here we check if the top is not pointing to the last element*/
 			{
-			*(info->current_pointer) = data;
 			(info->current_pointer)++;
+			*(info->current_pointer) = data;
 			is_stack_pushed++;
 			stack_status_flag = STACK_NOT_EMPTY;
 			}
@@ -80,15 +79,14 @@ void pop(ST_stackInfo *info, uint32* data)
 	if (info != NULL)
 	{
 	/* Then we need to check that the stack is created and not underflow and is containing data */
-		if ((STACK_CREATED == is_stack_created) && (STACK_NOT_UNDERFLOW == stack_status_flag))
+		if ((STACK_CREATED == is_stack_created) )
 		{
 			if ((info -> current_pointer) != (info ->top))
 			{
 				/* Here we make sure that the top pointer is not pointing the first element
 				 * in the stack to avoid underflow.
 				 * If so, then we clear the data and decrement the pointer by one step */
-				*data = *(info->current_pointer);
-				*(info->current_pointer) = DATA_EMPTY;
+				*data = (*(info->current_pointer));
 				(info->current_pointer)--;
 				is_stack_pulled++;
 				stack_status_flag = STACK_NOT_EMPTY;
